@@ -1,0 +1,39 @@
+# Rust 编译产物
+/target
+**/*.rs.bk
+*.pdb
+
+# 日志文件
+*.log
+logs/
+
+# 备份目录
+/backup
+
+# 生产配置（含本地敏感信息，请勿提交）
+# 如需提供示例，请复制为 config.example.yaml 并脱敏后提交
+config.yaml
+/etc/olivetin-rs/token.txt
+
+# 密钥 / 凭据
+*.pem
+*.key
+.env
+.env.*
+.token
+
+# 操作系统缓存文件
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE / 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统临时文件
+*.tmp
+*.temp
