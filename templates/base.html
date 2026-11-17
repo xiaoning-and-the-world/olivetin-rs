@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<style>{{ css|safe }}</style>
+</head>
+<body>
+<nav class="topbar">
+  <span class="brandwrap">
+    <span class="brand">OliveTin-RS</span>
+    <span class="app-version" title="{{ version_detail }}">{{ version }}</span>
+  </span>
+  <div class="navlinks">
+    <a href="/">动作</a>
+    <a href="/logs">日志</a>
+    <a href="/settings">设置</a>
+  </div>
+</nav>
+<main class="container" id="app">
+  {% block content %}{% endblock %}
+</main>
+<script defer>{{ js|safe }}</script>
+</body>
+</html>

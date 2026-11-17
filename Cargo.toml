@@ -1,0 +1,55 @@
+[package]
+name = "olivetin-rs"
+version = "0.2.0"
+edition = "2021"
+description = "OliveTin 精简重写：极轻量 Web 脚本管理面板（单文件静态部署，路由器优化版）"
+license = "MIT"
+
+[lib]
+name = "olivetin_rs"
+path = "src/lib.rs"
+
+[[bin]]
+name = "olivetin-rs"
+path = "src/main.rs"
+
+[dependencies]
+# Web
+axum = { version = "0.7", default-features = false, features = ["tokio", "http1", "multipart", "json", "form", "query"] }
+askama = { version = "0.12" }
+
+# Runtime
+tokio = { version = "1", default-features = false, features = [
+    "rt-multi-thread", "net", "process", "time", "sync", "macros", "fs", "signal", "io-util",
+] }
+
+# Config
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+serde_json = "1"
+
+# Hot reload
+notify = "6"
+arc-swap = "1"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
+
+# HTTP client
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+
+# Misc
+libc = "0.2"
+subtle = "2"
+cron = "0.12"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std", "serde"] }
+getrandom = "0.2"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+

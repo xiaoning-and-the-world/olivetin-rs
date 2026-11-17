@@ -1,0 +1,652 @@
+:root {
+  --bg: #fafafa; --card: #ffffff; --border: #e5e5e5;
+  --text: #1a1a1a; --text-muted: #6b6b6b;
+  --accent: #2563eb; --accent-hover: #1d4ed8;
+  --success: #16a34a; --warning: #d97706; --error: #dc2626;
+  --code-bg: #f5f5f5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111; --card: #1a1a1a; --border: #2a2a2a;
+    --text: #e5e5e5; --text-muted: #9a9a9a;
+    --accent: #3b82f6; --accent-hover: #60a5fa;
+    --success: #22c55e; --warning: #f59e0b; --error: #ef4444;
+    --code-bg: #0f0f0f;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+code, pre, .mono {
+  font-family: ui-monospace, "SF Mono", Monaco, Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px; padding: 0 24px;
+  background: var(--card); border-bottom: 1px solid var(--border);
+}
+.brand { font-size: 16px; font-weight: 600; }
+/* 顶栏版本徽标：打开页面就能看到跑的是哪一版，悬停看 commit / 构建时间 */
+.brandwrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.app-version {
+  font-family: ui-monospace, "SF Mono", Monaco, Consolas, monospace;
+  font-size: 11px; line-height: 1;
+  padding: 3px 7px; border-radius: 10px;
+  color: var(--text-muted); background: var(--code-bg);
+  border: 1px solid var(--border);
+  white-space: nowrap; cursor: default; user-select: all;
+}
+.navlinks a {
+  color: var(--text); text-decoration: none; margin-left: 16px;
+  font-size: 14px;
+}
+.navlinks a:hover { color: var(--accent); }
+.container {
+  max-width: 960px; margin: 0 auto; padding: 24px;
+}
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .topbar { padding: 0 16px; }
+}
+h1 { font-size: 20px; line-height: 1.4; margin: 0 0 16px; }
+.group { margin-bottom: 24px; }
+.group-header {
+  font-size: 16px; font-weight: 600; cursor: pointer;
+  padding: 8px 0; display: flex; align-items: center; gap: 8px;
+}
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px; margin-bottom: 12px;
+}
+.card-title { font-size: 16px; font-weight: 600; line-height: 1.4; }
+/* 动作卡片标题行：恒定单行。
+   旧实现是 flex-wrap:wrap，标题 + 定时标签 + 两个按钮宽度一超就往第二行挤，
+   于是「带定时的卡片」比「不带定时的卡片」高一行 —— 这是卡片大小不一致的根因之一。
+   现在标题自己收缩出省略号，右侧工具组永不换行，标题行高度与内容无关。 */
+.card-title-row {
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: nowrap; min-width: 0;
+}
+.card-title-row > .card-title {
+  flex: 1 1 auto; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.card-tools {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.card-desc { color: var(--text-muted); font-size: 14px; margin: 4px 0; }
+.meta-line { color: var(--text-muted); font-size: 12px; margin: 4px 0; }
+.badge {
+  display: inline-block; padding: 1px 8px; border-radius: 10px;
+  font-size: 12px; background: var(--code-bg); color: var(--text-muted);
+  cursor: pointer; border: 1px solid var(--border);
+}
+.badge.active { color: var(--accent); border-color: var(--accent); }
+.badge.running { color: var(--success); border-color: var(--success); }
+.tag {
+  display: inline-block; padding: 1px 8px; border-radius: 4px;
+  font-size: 12px; background: var(--code-bg); color: var(--text-muted);
+  margin-right: 6px;
+}
+button {
+  background: var(--accent); color: #fff; border: none;
+  padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;
+}
+button:hover { background: var(--accent-hover); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+button.danger { background: var(--error); }
+input[type="text"], input[type="number"], input[type="file"], select {
+  padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--card); color: var(--text); font-size: 14px; width: 100%;
+}
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.required::after { content: " *"; color: var(--error); }
+.exec-row { margin-top: 12px; display: flex; gap: 8px; }
+.result {
+  margin-top: 12px; padding: 12px; border-radius: 6px;
+  background: var(--code-bg); font-size: 13px;
+}
+.result pre { margin: 0; white-space: pre-wrap; word-break: break-all; }
+.result .summary { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.ok { color: var(--success); }
+.err { color: var(--error); }
+.warn { color: var(--warning); }
+.muted { color: var(--text-muted); }
+
+/* 日志页 */
+table.logs { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.logs th, table.logs td {
+  padding: 8px; text-align: left; border-bottom: 1px solid var(--border);
+}
+table.logs th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
+table.logs tr { cursor: pointer; }
+table.logs tr:hover { background: var(--code-bg); }
+.filters { display: flex; gap: 12px; margin-bottom: 16px; }
+
+/* dialog */
+dialog {
+  border: 1px solid var(--border); border-radius: 8px; background: var(--card);
+  color: var(--text); padding: 20px; max-width: 480px; width: 90%;
+}
+dialog::backdrop { background: rgba(0,0,0,0.4); }
+.dialog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.dialog-title { font-size: 16px; font-weight: 600; }
+.close-btn { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+
+/* toast */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--text); color: var(--bg); padding: 10px 20px;
+  border-radius: 6px; font-size: 14px; z-index: 999;
+  display: none; max-width: 90%; word-break: break-all;
+}
+#toast.show { display: block; }
+
+/* 进度条 */
+.progress-bar {
+  height: 8px; background: var(--border); border-radius: 4px;
+  overflow: hidden; margin: 8px 0;
+}
+.progress-fill {
+  height: 100%; background: var(--accent); transition: width 0.1s linear; width: 0;
+}
+.progress-text {
+  font-size: 12px; color: var(--text-muted);
+  display: flex; justify-content: space-between;
+}
+.upload-error { color: var(--error); font-size: 12px; margin-top: 8px; }
+
+/* 版本面板 */
+.version-row {
+  display: flex; align-items: center; gap: 8px; padding: 8px;
+  border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.version-row:hover { background: var(--code-bg); }
+.version-name { font-family: ui-monospace, monospace; font-weight: 600; }
+.version-meta { color: var(--text-muted); font-size: 12px; flex: 1; }
+.version-active { color: var(--accent); font-weight: 600; }
+.version-actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ===== 响应式优化（手机 / 平板 / 桌面） ===== */
+
+/* 触摸目标更大，避免误触 */
+button { min-height: 36px; }
+button.secondary, button.danger { touch-action: manipulation; }
+
+/* 日志表格容器横向滚动（小屏不撑破） */
+table.logs { min-width: 640px; }
+
+/* 平板（<768px） */
+@media (max-width: 768px) {
+  .container { max-width: 100%; padding: 12px; }
+  .topbar { padding: 0 12px; height: 52px; }
+  .card { padding: 12px; }
+  h1 { font-size: 18px; }
+  /* 动作卡片标题行：保持单行（标题自动省略），不让换行改变卡片高度 */
+  .card-title-row { flex-wrap: nowrap; gap: 6px; }
+  /* 编辑/删除按钮更紧凑 */
+  button { font-size: 13px; padding: 7px 12px; }
+}
+
+/* 手机（<480px） */
+@media (max-width: 480px) {
+  body { font-size: 15px; }
+  .container { padding: 8px; }
+  .topbar { padding: 0 8px; }
+  .navlinks a { margin-left: 10px; font-size: 13px; }
+  .brand { font-size: 14px; }
+  .card { padding: 10px; border-radius: 6px; }
+  /* 参数输入全宽，便于触摸 */
+  .field input, .field select, .field textarea { font-size: 16px; padding: 8px; }
+  /* 执行按钮全宽，好点 */
+  .exec-row { flex-direction: column; }
+  .exec-row button { width: 100%; }
+  /* dialog 全宽 */
+  dialog { width: 96%; max-width: 96%; padding: 14px; }
+  /* 版本行：小屏换行 */
+  .version-row { flex-wrap: wrap; }
+  /* 日志筛选器竖排 */
+  .filters { flex-direction: column; gap: 6px; }
+  /* 按钮组不溢出 */
+  .version-actions button { flex: 1; min-width: 0; }
+  /* toast 不超屏 */
+  #toast { max-width: 92%; font-size: 13px; }
+}
+
+/* 桌面大屏（>1200px）适当居中，留白更舒适 */
+@media (min-width: 1200px) {
+  .container { max-width: 1080px; }
+}
+
+/* ===== 分组列表：默认收起 / 位置可调 / 横向排列 ===== */
+.groups-layout { display: block; }
+.groups-layout.pos-left,
+.groups-layout.pos-right { display: flex; gap: 16px; align-items: flex-start; }
+.groups-layout.pos-right { flex-direction: row-reverse; }
+.group-nav {
+  flex: 0 0 160px; display: flex; flex-direction: column; gap: 6px;
+  position: sticky; top: 12px;
+}
+.group-nav-item { width: 100%; text-align: left; font-size: 13px; }
+.groups-content { flex: 1; min-width: 0; }
+.group-header::before { content: '▾'; font-size: 12px; color: var(--text-muted); }
+.group-header.collapsed::before { content: '▸'; }
+.group-body.collapsed { display: none !important; }
+.group-body.layout-vertical { display: block; }
+.group-body.layout-horizontal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* 所有隐式行等高：每行高度取「本组最高卡片」，卡片再 height:100% 撑满，
+     于是整组卡片外框尺寸完全一致（旧实现 align-items:start 让每张卡片
+     按自身内容收缩，这是卡片大小不一致的根因之一）。 */
+  grid-auto-rows: 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+.group-body.layout-horizontal .card {
+  margin-bottom: 0;
+  height: 100%;
+  display: flex; flex-direction: column;
+}
+/* 卡片内部结构固定为「标题行 + 描述槽 + 状态槽 + 弹性留白 + 操作行」，
+   描述/状态为空时也占位，所以有没有定时任务不再改变卡片高度。 */
+.group-body .card > .card-desc {
+  min-height: 1.5em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.group-body .card > .card-meta { min-height: 1.6em; }
+/* 执行按钮贴底：卡片被拉伸后按钮仍对齐在同一条水平线上 */
+.group-body.layout-horizontal .card > .exec-row { margin-top: auto; }
+/* 执行结果限高内部滚动，避免一次执行把整组卡片撑高 */
+.group-body.layout-horizontal .card > .result { max-height: 200px; overflow-y: auto; }
+@media (max-width: 768px) {
+  .groups-layout.pos-left,
+  .groups-layout.pos-right { flex-direction: column; }
+  .group-nav {
+    flex: none; width: 100%; flex-direction: row; flex-wrap: wrap; position: static;
+  }
+  .group-nav-item { width: auto; }
+  /* 窄屏单列：不再强制组内等行高（否则一张带执行结果的卡片会把整列撑高），
+     但卡片内部结构仍然是固定的，除非有参数/结果，否则高度一致。 */
+  .group-body.layout-horizontal { grid-template-columns: 1fr; grid-auto-rows: auto; }
+}
+
+/* ===== 设置页：统一宽度规格 =====
+   所有卡片占满整行（同宽），卡片内设置项按两列等宽网格排布；
+   标题 / 说明 / 占用行 / 按钮跨两列，所有含文字的控件同宽、同高、同字号。 */
+.settings-section { margin-top: 22px; }
+.settings-section > h2 {
+  font-size: 13px; font-weight: 600; color: var(--text-muted);
+  letter-spacing: .04em; margin: 0 0 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.settings-grid {
+  --settings-control-height: 34px;
+  --settings-control-font: 14px;
+  display: grid; grid-template-columns: minmax(0, 1fr);
+  gap: 12px; align-items: stretch;
+}
+.settings-grid .card {
+  width: 100%; min-width: 0; margin-bottom: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 16px; align-content: start;
+}
+/* 跨两列：标题、说明、占用行、按钮 */
+.settings-grid .card > .card-title,
+.settings-grid .card > .meta-line,
+.settings-grid .card > button { grid-column: 1 / -1; }
+.settings-grid .card > button {
+  justify-self: start; height: var(--settings-control-height); padding: 0 16px;
+}
+/* 所有设置项区块等宽 */
+.settings-grid .field { width: 100%; min-width: 0; margin-bottom: 12px; }
+.settings-grid .field label { font-size: 12px; line-height: 1.6; }
+/* 所有含文字的控件：同一宽度 / 高度 / 字号 / 字体 */
+.settings-grid .field input:not([type="checkbox"]),
+.settings-grid .field select {
+  width: 100%; height: var(--settings-control-height);
+  font-family: inherit; font-size: var(--settings-control-font);
+}
+.settings-actions { margin-top: 20px; display: flex; align-items: center; gap: 10px; }
+.usage-row {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 10px;
+  min-height: var(--settings-control-height); margin-bottom: 12px;
+}
+.usage-row .muted { font-size: 12px; line-height: 1.6; }
+.usage-value {
+  font-family: inherit; font-size: var(--settings-control-font); font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.usage-row button {
+  margin-left: auto; height: var(--settings-control-height);
+  padding: 0 16px; font-size: var(--settings-control-font);
+}
+/* 卡片内逻辑子区：跨两列、强制另起一行；互斥字段切换时后续区块不跳位 */
+.settings-grid .card > .settings-subhead {
+  grid-column: 1 / -1;
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  letter-spacing: .04em; margin: 2px 0 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.settings-grid .card > .settings-subhead:not(:first-child) { margin-top: 8px; }
+/* 标签右侧的状态徽标 / 小字提示：不占独立行，不挤占控件宽度 */
+.settings-badge {
+  float: right; font-size: 11px; line-height: 1.4; font-weight: 400;
+  padding: 1px 8px; border-radius: 10px;
+  background: var(--code-bg); color: var(--text-muted); border: 1px solid var(--border);
+}
+.settings-badge.configured { color: var(--success); border-color: var(--success); }
+.settings-label-hint { float: right; font-size: 11px; font-weight: 400; color: var(--text-muted); }
+/* 复选框与文字同行，行高/字号与输入型控件一致 */
+.settings-grid .field.check-field label {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  min-height: var(--settings-control-height); margin: 0;
+  font-size: var(--settings-control-font); color: var(--text);
+}
+.settings-grid .field.check-field input[type="checkbox"] {
+  width: 16px; height: 16px; margin: 0; flex: none; accent-color: var(--accent);
+}
+/* ===== 推送通道卡片：统一的信息结构与间距节奏 =====
+   间距只从四个变量取值；所有元素只用 margin-bottom，避免 grid item 外边距累加。
+   区块内元素间距 12px，区块之间 12 + 8(padding-top) = 20px。 */
+.push-card {
+  --settings-block-gap: 8px;
+  --settings-field-gap: 12px;
+  --settings-label-gap: 6px;
+  --settings-hint-gap: 4px;
+}
+/* 子区标题：去掉横线，用左侧竖条 + 上方留白分组，横线由 3 条降为 0 条 */
+/* 特异性需高于基础 .settings-grid .card > .settings-subhead (0,3,0) */
+.settings-grid .card.push-card > .settings-subhead {
+  margin: 0 0 10px; padding: var(--settings-block-gap) 0 0 8px;
+  border-bottom: 0; border-left: 2px solid var(--accent);
+  font-weight: 500; letter-spacing: 0;
+}
+.settings-grid .card.push-card > .settings-subhead:not(:first-child) { margin-top: 0; }
+/* 字段：统一 12px 行距、6px 标签间距；标签 flex 让徽标稳定右对齐 */
+.settings-grid .card.push-card .field { margin-bottom: var(--settings-field-gap); }
+.settings-grid .card.push-card .field label {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  min-height: 19px; margin-bottom: var(--settings-label-gap);
+  font-size: 12px; line-height: 1.6;
+}
+/* 卡片级开关行：跨两列独立成行，不再与输入框并排，消除高度不齐 */
+.push-card > .settings-switch-row {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 12px; margin-bottom: var(--settings-field-gap);
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  cursor: pointer;
+}
+.settings-switch-row .switch-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.settings-switch-row .switch-title { font-size: var(--settings-control-font); color: var(--text); }
+.settings-switch-row .switch-desc { font-size: 12px; line-height: 1.5; color: var(--text-muted); }
+.settings-switch-row input[type="checkbox"] {
+  width: 18px; height: 18px; margin: 0; flex: none;
+  accent-color: var(--accent); cursor: pointer;
+}
+/* 说明文字：统一 12px，紧跟所属字段组，归属明确 */
+.push-card > .settings-hint {
+  grid-column: 1 / -1;
+  font-size: 12px; line-height: 1.6; color: var(--text-muted);
+  margin: 0 0 var(--settings-field-gap);
+}
+/* 说明块：占网格右列、与输入框底部对齐；两种通道下字段区都保持两列填满 */
+.push-card .field.settings-note-field {
+  display: flex; align-items: flex-end;
+  margin-bottom: var(--settings-field-gap);
+}
+.settings-note-box {
+  width: 100%; min-height: var(--settings-control-height);
+  display: flex; align-items: center; padding: 6px 10px;
+  font-size: 12px; line-height: 1.5; color: var(--text-muted);
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px;
+}
+/* 徽标与小字：由标签的 flex 推到右侧，不再用 float 错位 */
+.push-card .settings-badge,
+.push-card .settings-label-hint { float: none; }
+@media (max-width: 768px) {
+  .settings-grid .card { grid-template-columns: minmax(0, 1fr); }
+  .push-card .field.settings-note-field { align-items: stretch; }
+}
+
+/* ===== 设置页排版 v2：整行项 + 只读值 + 分区节奏 =====
+   问题：新增的「通知栏标题」是单列下拉，独占半行、右侧留白，
+   把推送卡片原本「整行开关 / 两列字段」的节奏打断，看起来像塌了一块。
+   这里引入「整行项」：标签在左、控件在右，与 switch-row 同为整行块，
+   三行（标题 / 包含输出 / 说明）形成稳定的横向节奏。 */
+.settings-grid .card.push-card .field.field-inline {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; margin-bottom: var(--settings-field-gap);
+}
+/* 特异性高于 .settings-grid .card.push-card .field label (0,4,1) */
+.settings-grid .card.push-card .field.field-inline > label {
+  display: block; margin: 0; min-height: 0; white-space: nowrap;
+  font-size: var(--settings-control-font); color: var(--text);
+}
+.settings-grid .card.push-card .field.field-inline > select {
+  width: 300px; flex: 0 0 300px;
+}
+/* 只读值（关于 / 版本信息）：与输入框同高同圆角，可选中复制 */
+.settings-grid .field-readonly .readonly-value {
+  min-height: var(--settings-control-height);
+  display: flex; align-items: center;
+  padding: 0 10px; overflow: hidden;
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px;
+  font-family: ui-monospace, "SF Mono", Monaco, Consolas, monospace;
+  font-size: 12px; color: var(--text);
+  white-space: nowrap; text-overflow: ellipsis;
+  user-select: all; cursor: text;
+}
+.settings-grid .field-readonly { margin-bottom: 12px; }
+.settings-grid .field-readonly.field-wide { grid-column: 1 / -1; }
+/* 分区之间的呼吸感；卡片之间稍拉开，避免两条细边框挨在一起 */
+.settings-section { margin-top: 28px; }
+.settings-section:first-of-type { margin-top: 20px; }
+.settings-grid { gap: 16px; }
+/* 保存区：与上方卡片用一条分隔线隔开，按钮不再悬空 */
+.settings-actions {
+  margin-top: 24px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 560px) {
+  .settings-grid .card.push-card .field.field-inline {
+    flex-direction: column; align-items: stretch; gap: 6px;
+  }
+  .settings-grid .card.push-card .field.field-inline > select {
+    width: 100%; flex: 1 1 auto;
+  }
+  .settings-grid .card.push-card .field.field-inline > label { white-space: normal; }
+}
+
+/* ===== 设置页：日志卡片 / 关于卡片重排（v3） =====
+   日志：占用值做成「大号数字 + 紧跟单位」的信息块，单位切换改段控放标题行；
+   单位不再写进 label，也不再出现第二个「MB」下拉。
+   关于：改用定义列表（标签右对齐 + 等宽值），像系统关于窗口，而非一排只读输入框。 */
+.settings-grid .card > .card-title-row {
+  grid-column: 1 / -1; margin-bottom: 10px; align-items: center;
+}
+/* 卡片标题行里的段控（KB/MB） */
+.seg {
+  display: inline-flex; align-items: center;
+  border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+}
+.seg button {
+  background: transparent; color: var(--text-muted);
+  border: 0; border-radius: 0; padding: 2px 10px;
+  font-size: 11px; line-height: 1.7; cursor: pointer;
+}
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button:hover { background: var(--code-bg); color: var(--text); }
+.seg button.active { background: var(--code-bg); color: var(--text); font-weight: 600; }
+
+/* 占用信息块：数字大、单位紧跟、明细小字，刷新靠右 */
+.settings-grid .usage-block {
+  grid-column: 1 / -1;
+  display: flex; align-items: baseline; gap: 4px;
+  padding: 12px 14px; margin-bottom: 14px;
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+}
+.usage-number {
+  font-size: 24px; font-weight: 600; line-height: 1.15;
+  font-variant-numeric: tabular-nums; color: var(--text);
+}
+.usage-unit { font-size: 12px; color: var(--text-muted); margin-left: 2px; }
+.usage-sub { font-size: 12px; color: var(--text-muted); margin-left: 10px; }
+.usage-refresh {
+  margin-left: auto; height: 28px; padding: 0 12px; font-size: 12px;
+  align-self: center;
+}
+
+/* 带单位后缀的数字输入：单位贴在框内右端 */
+.suffix-wrap { position: relative; }
+.settings-grid .field-suffix .suffix-wrap input { padding-right: 42px; }
+.suffix-wrap .suffix {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 12px; color: var(--text-muted); pointer-events: none;
+}
+/* 跨两列的长字段（日志目录这类） */
+.settings-grid .field.field-wide { grid-column: 1 / -1; }
+
+/* 关于：定义列表 */
+.settings-grid .about-list {
+  grid-column: 1 / -1; margin: 0 0 6px;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 18px; row-gap: 9px; align-items: baseline;
+}
+.about-list dt {
+  font-size: 12px; color: var(--text-muted);
+  text-align: right; white-space: nowrap;
+}
+.about-list dd {
+  margin: 0; min-width: 0;
+  font-family: ui-monospace, "SF Mono", Monaco, Consolas, monospace;
+  font-size: 12.5px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  user-select: all;
+}
+.settings-grid .about-note { font-size: 11px; line-height: 1.6; margin-top: 10px; }
+
+@media (max-width: 560px) {
+  .settings-grid .about-list { grid-template-columns: minmax(0, 1fr); row-gap: 5px; }
+  .about-list dt { text-align: left; }
+  .about-list dd { white-space: normal; word-break: break-all; }
+  .settings-grid .usage-block { flex-wrap: wrap; }
+  .usage-sub { margin-left: 0; width: 100%; }
+}
+
+/* ===== 设置页：标题行与危险按钮（v4） =====
+   保存按钮从页面底部升到标题行右侧：设置项越来越多，滚到底才能保存不合理。
+   日志卡片里的「刷新」换成「清除全部日志文件」，用描边危险色，避免与主按钮抢视觉。 */
+.page-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 18px;
+}
+.page-head > h1 { margin: 0; font-size: 20px; line-height: 1.4; }
+.page-head .page-head-action {
+  flex: none; height: 36px; padding: 0 18px; font-size: 14px;
+}
+button.btn-quiet-danger {
+  background: transparent; color: var(--error);
+  border: 1px solid var(--error); border-radius: 6px;
+  padding: 0 12px; font-size: 12px; cursor: pointer;
+}
+button.btn-quiet-danger:hover { background: var(--error); color: #fff; }
+button.btn-quiet-danger:disabled { opacity: .5; cursor: not-allowed; }
+/* 占用块内按钮与数字同高，不被 baseline 拖偏 */
+.settings-grid .usage-block .usage-refresh { align-self: center; height: 28px; }
+@media (max-width: 560px) {
+  .page-head { align-items: flex-start; }
+  .page-head .page-head-action { height: 32px; padding: 0 12px; font-size: 13px; }
+  .settings-grid .usage-block .usage-refresh { width: 100%; margin-left: 0; }
+}
+
+/* ===== 关于卡片：整体降一级字号，与上方可编辑内容形成层次 =====
+   上方设置项 label 12px / 控件 14px；关于是只读的次要信息，
+   标题 14px、内容 11.5px、行距 6px，读起来更紧凑，也不会抢主内容的注意力。 */
+.settings-grid .card.about-card > .card-title-row { margin-bottom: 8px; }
+.settings-grid .card.about-card .card-title { font-size: 14px; }
+.settings-grid .card.about-card .card-title-row .badge {
+  font-size: 11px; padding: 0 7px; line-height: 1.7;
+}
+.settings-grid .card.about-card .about-list {
+  column-gap: 14px; row-gap: 6px; margin-bottom: 4px;
+}
+.settings-grid .card.about-card .about-list dt { font-size: 11px; line-height: 1.5; }
+.settings-grid .card.about-card .about-list dd { font-size: 11.5px; line-height: 1.5; }
+.settings-grid .card.about-card .about-note {
+  font-size: 10.5px; line-height: 1.6; margin-top: 8px;
+}
+@media (max-width: 560px) {
+  .settings-grid .card.about-card .about-list { row-gap: 4px; }
+}
+
+/* ===== 执行按钮的分裂下拉（VSCode 风格） =====
+   [执行][▾] 同色系一体，箭头紧贴右侧；菜单从箭头下方展开，卡片底色 + 阴影。
+   不用原生 select：原生控件无法做到「紧贴 + 同色 + 自绘菜单」。 */
+.split-wrap { position: relative; display: inline-flex; align-items: stretch; }
+.split-wrap > button { margin: 0; }
+.split-wrap > button.split-caret {
+  border-radius: 0 6px 6px 0;
+  padding: 0 9px; min-width: 28px;
+  font-size: 11px; line-height: 1;
+  border-left: 1px solid rgba(255, 255, 255, .28);
+  margin-left: 0;
+}
+.split-wrap > button:first-child { border-radius: 6px 0 0 6px; }
+.split-menu {
+  position: absolute; top: calc(100% + 4px); right: 0; z-index: 40;
+  min-width: 170px; max-height: 260px; overflow-y: auto;
+  padding: 4px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+}
+.split-item {
+  display: block; width: 100%; text-align: left;
+  background: transparent; color: var(--text);
+  border: 0; border-radius: 5px;
+  padding: 6px 10px; font-size: 13px; line-height: 1.4;
+  cursor: pointer; white-space: nowrap;
+}
+.split-item:hover { background: var(--code-bg); }
+.split-item.active { color: var(--accent); background: var(--code-bg); font-weight: 600; }
+
+/* --help 参数参考：过滤 help 自身后的参数列表 */
+.help-param-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.help-param-row { display: flex; gap: 12px; align-items: baseline; }
+.help-param-row code {
+  background: var(--code-bg); border: 1px solid var(--border);
+  padding: 1px 6px; border-radius: 4px;
+  font-size: 12px; white-space: nowrap;
+}
+.help-param-row span { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+@media (max-width: 560px) {
+  .split-menu { right: auto; left: 0; }
+}
+
+/* 执行参数的多行子命令输入 */
+.ea-sub-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+.ea-sub-row .ea-sub-input { flex: 1; min-width: 0; }
+.ea-sub-row .ea-sub-del {
+  flex: none; padding: 2px 9px; font-size: 12px; line-height: 1.6;
+}
+
+/* 执行参数说明里的小标签（开关 / 必填） */
+.help-param-row .param-kind {
+  font-style: normal; font-size: 11px; color: var(--text-muted);
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 4px; padding: 0 5px;
+}
